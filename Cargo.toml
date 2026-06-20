@@ -7,7 +7,7 @@ repository.workspace = true
 license.workspace = true
 
 [workspace]
-resolver = "2"
+resolver = "3"
 members = ["example"]
 
 [workspace.package]
@@ -18,11 +18,11 @@ license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
 js-sys = "0.3.94"
-bevy = { default-features = false, version = "0.18.1" }
+bevy = { default-features = false, version = "0.19" }
 wasm-bindgen = "0.2.117"
 
 [dependencies]
-bevy_blob_loader = "0.3.0"
+bevy_blob_loader = "0.4.0"
 bevy = { workspace = true, features = ["3d_api"] }
 js-sys.workspace = true
 wasm-bindgen.workspace = true

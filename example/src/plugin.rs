@@ -6,7 +6,7 @@ impl Plugin for ExamplePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<ActiveImage>()
             .add_systems(Startup, setup)
-            .add_systems(Update, (read_file_drops, set_sprite));
+            .add_systems(FixedUpdate, (read_file_drops, set_sprite));
     }
 }
 
@@ -40,10 +40,10 @@ fn read_file_drops(
         info!("> {event:?}");
 
         if let FileDragAndDrop::DroppedFile { path_buf, .. } = event {
-            #[cfg(target_family = "wasm")]
-            let path = String::from(path_buf.to_str().unwrap());
-            #[cfg(not(target_family = "wasm"))]
-            let path = bevy::asset::AssetPath::from_path(path_buf.as_path());
+            let path = cfg_select! {
+                target_family = "wasm" => String::from(path_buf.to_str().unwrap()),
+                _ => bevy::asset::AssetPath::from_path(path_buf.as_path()),
+            };
 
             info!("Loading image: {}", path);
             active_image.0 = asset_server.load(path);
