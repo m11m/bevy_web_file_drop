@@ -20,7 +20,7 @@ export function init() {
     }
 
     const files = e.dataTransfer.files;
-    for(let i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const ext = file.name.split(".").pop();
       const url = URL.createObjectURL(file);

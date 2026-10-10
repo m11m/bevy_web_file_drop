@@ -8,16 +8,19 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
   outputs =
     {
+      self,
       flake-utils,
       nixpkgs,
       rust-overlay,
+      treefmt-nix,
       ...
     }:
-    flake-utils.lib.eachDefaultSystem (
+    flake-utils.lib.eachSystem [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" ] (
       system:
       let
         overlays = [ (import rust-overlay) ];
@@ -49,13 +52,39 @@
           wasm-bindgen-cli
         ];
 
-        code = pkgs.callPackage ./. {
-          inherit
-            pkgs
-            system
-            build_inputs
-            native_build_inputs
-            ;
+        code = pkgs.callPackage ./. { inherit pkgs build_inputs native_build_inputs; };
+
+        treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          projectRootFile = "flake.nix";
+
+          programs = {
+            actionlint.enable = true;
+            deadnix.enable = true;
+            jsonfmt.enable = true;
+            mdformat.enable = true;
+            nixfmt = {
+              enable = true;
+              strict = true;
+            };
+            oxipng.enable = true;
+            prettier = {
+              enable = true;
+              includes = [
+                "*.css"
+                "*.html"
+                "*.js"
+                "*.json"
+                "*.ts"
+              ];
+            };
+            rustfmt = {
+              enable = true;
+              package = rustToolchain;
+            };
+            statix.enable = true;
+            taplo.enable = true;
+            yamlfmt.enable = true;
+          };
         };
       in
       rec {
@@ -97,7 +126,11 @@
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath build_inputs;
         };
 
-        formatter = pkgs.nixfmt;
+        formatter = treefmtEval.config.build.wrapper;
+
+        checks = {
+          formatting = treefmtEval.config.build.check self;
+        };
       }
     );
 }

@@ -1,15 +1,12 @@
 {
   lib,
   pkgs,
-  system,
   build_inputs,
   native_build_inputs,
   makeRustPlatform,
 }:
 let
-  rustBin = pkgs.rust-bin.stable.latest.default.override {
-    targets = [ "wasm32-unknown-unknown" ];
-  };
+  rustBin = pkgs.rust-bin.stable.latest.default.override { targets = [ "wasm32-unknown-unknown" ]; };
 
   rustPlatform = makeRustPlatform {
     cargo = rustBin;
