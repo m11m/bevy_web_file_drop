@@ -10,3 +10,12 @@ View the example on web with `trunk serve`.
 View the example on native with `cargo run -p example`.
 
 Drop in `.png` files to see the texture change.
+
+### Linux/Wayland
+
+`winit`'s Wayland backend does not emit drag-and-drop events (only X11, Windows and macOS do), so on a Wayland session the native example receives nothing.
+Run it under X11 instead:
+
+```sh
+env -u WAYLAND_DISPLAY cargo run -p example
+```
