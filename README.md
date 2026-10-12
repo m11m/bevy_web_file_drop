@@ -6,12 +6,21 @@ This plugin adds some custom JavaScript glue around the canvas to catch these ev
 
 ## Testing
 
-View the example on web with `trunk serve`.
-View the example on native with `cargo run -p example`.
+Drop PNG or JPEG files in the example to see the texture change.
 
-Drop in `.png` files to see the texture change.
+### Web
 
-### Linux/Wayland
+```sh
+trunk serve
+```
+
+### Native
+
+```sh
+cargo run -p example
+```
+
+#### Linux/Wayland
 
 `winit`'s Wayland backend does not emit drag-and-drop events (only X11, Windows and macOS do), so on a Wayland session the native example receives nothing.
 Run it under X11 instead:
